@@ -1,5 +1,3 @@
-<img src="banner.webp" width="100%" alt="banner">
-
 # kcdmap-electron = [kingdomcomemap](https://kingdomcomemap.github.io) + [electron](https://electronjs.org)
 
 [![Online](https://badgen.net/badge/icon/online?icon=firefox&label)](https://kingdomcomemap.github.io)[![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/gfFAt5JW)
