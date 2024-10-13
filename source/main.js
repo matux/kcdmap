@@ -1,4 +1,9 @@
-const {app, BrowserWindow, shell, Menu} = require('electron');
+const {
+    app,
+    BrowserWindow,
+    shell,
+    Menu
+} = require("electron");
 const path = require("node:path");
 /*const { version, homepage } = require(path.join(__dirname, 'package.json'));
 const fs = require("node:fs/promises");
@@ -62,70 +67,72 @@ const minify = require("html-minifier").minify;*/
 */
 
 class Menus {
-  static #len = 0;
-  static #aboutWindow = null; // AboutWindow örneğini saklayacak alan
+    static #len = 0;
+    static #aboutWindow = null; // AboutWindow örneğini saklayacak alan
 
-  static AboutWindow() {
-    if (Menus.#aboutWindow) {
-      // Zaten açık bir pencere varsa, o pencereyi ön planda yap
-      Menus.#aboutWindow.focus();
-      return;
+    static AboutWindow() {
+        if (Menus.#aboutWindow) {
+            // Zaten açık bir pencere varsa, o pencereyi ön planda yap
+            Menus.#aboutWindow.focus();
+            return;
+        }
+
+        Menus.assert();
+        Menus.#len += 1;
+
+        Menus.#aboutWindow = new BrowserWindow({
+            width: 400,
+            height: 200,
+            title: "About",
+            icon: path.join(__dirname, "app", "icons", "png", "info.png"),
+            modal: true,
+            parent: BrowserWindow.getFocusedWindow(),
+            resizable: false,
+            minimizable: false,
+            maximizable: false,
+            webPreferences: {
+                nodeIntegration: false,
+                contextIsolation: true,
+                preload: path.join(__dirname, "preload.js"),
+            },
+        });
+
+        Menus.#aboutWindow.loadFile(path.join(__dirname, "about.html"));
+
+        Menus.#aboutWindow.webContents.setWindowOpenHandler(({
+            url
+        }) => {
+            if (url.startsWith("https:")) {
+                shell.openExternal(url);
+            }
+            return {
+                action: "deny"
+            };
+        });
+
+        Menus.#aboutWindow.setMenu(null);
+
+        Menus.#aboutWindow.on("closed", () => {
+            Menus.#aboutWindow = null; // Pencere kapatıldığında referansı temizle
+            Menus.#len -= 1;
+        });
     }
 
-    Menus.assert();
-    Menus.#len += 1;
-
-    Menus.#aboutWindow = new BrowserWindow({
-      width: 400,
-      height: 200,
-      title: 'About',
-      icon: path.join(__dirname, "app", "icons", "png", "info.png"),
-      modal: true,
-      parent: BrowserWindow.getFocusedWindow(),
-      resizable: false,
-      minimizable: false,
-      maximizable: false,
-      webPreferences: {
-        nodeIntegration: false,
-        contextIsolation: true,
-        preload: path.join(__dirname, 'preload.js')
-      }
-    });
-
-    Menus.#aboutWindow.loadFile(path.join(__dirname, "about.html"));
-
-    Menus.#aboutWindow.webContents.setWindowOpenHandler(({ url }) => {
-      if (url.startsWith('https:')) {
-        shell.openExternal(url);
-      }
-      return { action: 'deny' };
-    });
-    
-    Menus.#aboutWindow.setMenu(null);
-
-    Menus.#aboutWindow.on('closed', () => {
-      Menus.#aboutWindow = null; // Pencere kapatıldığında referansı temizle
-      Menus.#len -= 1;
-    });
-  }
-
-  static close() {
-    if (Menus.#aboutWindow) {
-      Menus.#aboutWindow.close();
+    static close() {
+        if (Menus.#aboutWindow) {
+            Menus.#aboutWindow.close();
+        }
     }
-  }
 
-  static assert() {
-    if (Menus.#len > 0) {
-      throw new Error(
-        `Maximum number of windows reached ${Menus.#len}`
-      );
+    static assert() {
+        if (Menus.#len > 0) {
+            throw new Error(`Maximum number of windows reached ${Menus.#len}`);
+        }
     }
-  }
 
-  static get length() {
-    return Menus.#len;
-  }
+    static get length() {
+        return Menus.#len;
+    }
 }
 
 function createWindow() {
@@ -135,75 +142,90 @@ function createWindow() {
         icon: path.join(__dirname, "app", "icons", "png", "256x256.png"),
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
-            nodeIntegration: false
-        }
+            nodeIntegration: false,
+        },
     });
     win.loadFile(path.join(__dirname, "index.html"));
 
-    win.webContents.setWindowOpenHandler(({ url }) => {
-      // Only allow https external links
-      if (url.startsWith('https:')) {
-          shell.openExternal(url)
-      }
-      return { action: 'deny' }
+    win.webContents.setWindowOpenHandler(({
+        url
+    }) => {
+        // Only allow https external links
+        if (url.startsWith("https:")) {
+            shell.openExternal(url);
+        }
+        return {
+            action: "deny"
+        };
     });
 }
 
 app.whenReady().then(() => {
-    createWindow()
+    createWindow();
 
-
-    const menu = Menu.buildFromTemplate([
-      {
-        label: 'File',
-        submenu: [
-          { role: 'quit' }
-        ]
-      },
-      {
-        label: 'Edit',
-        submenu: [
-          { role: 'undo' },
-          { role: 'redo' },
-          { type: 'separator' },
-          { role: 'cut' },
-          { role: 'copy' },
-          { role: 'paste' },
-          { type: 'separator' },
-          { role: 'selectall' }
-        ]
-      },
-      {
-        label: "View",
-        submenu: [
-          { role: 'toggleDevTools' }
-        ]
-      },
-      {
-        label: 'Help',
-        submenu: [
-          {
-            label: 'About',
-            click() {
-              Menus.assert();
-              Menus.AboutWindow();
-            }
-          }
-        ]
-      }
+    const menu = Menu.buildFromTemplate([{
+            label: "File",
+            submenu: [{
+                role: "quit"
+            }],
+        },
+        {
+            label: "Edit",
+            submenu: [{
+                    role: "undo"
+                },
+                {
+                    role: "redo"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "cut"
+                },
+                {
+                    role: "copy"
+                },
+                {
+                    role: "paste"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "selectall"
+                },
+            ],
+        },
+        {
+            label: "View",
+            submenu: [{
+                role: "toggleDevTools"
+            }],
+        },
+        {
+            label: "Help",
+            submenu: [{
+                label: "About",
+                click() {
+                    Menus.assert();
+                    Menus.AboutWindow();
+                },
+            }, ],
+        },
     ]);
 
     Menu.setApplicationMenu(menu);
-  
-    app.on('activate', () => {
-      if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow()
-      }
-    })
-  })
+
+    app.on("activate", () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow();
+        }
+    });
+});
 
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         app.quit();
     }
-})
+});
