@@ -1,9 +1,4 @@
-const {
-    app,
-    BrowserWindow,
-    shell,
-    Menu
-} = require("electron");
+const { app, BrowserWindow, shell, Menu } = require("electron");
 const path = require("node:path");
 /*const { version, homepage } = require(path.join(__dirname, 'package.json'));
 const fs = require("node:fs/promises");
@@ -99,14 +94,12 @@ class Menus {
 
         Menus.#aboutWindow.loadFile(path.join(__dirname, "about.html"));
 
-        Menus.#aboutWindow.webContents.setWindowOpenHandler(({
-            url
-        }) => {
+        Menus.#aboutWindow.webContents.setWindowOpenHandler(({ url }) => {
             if (url.startsWith("https:")) {
                 shell.openExternal(url);
             }
             return {
-                action: "deny"
+                action: "deny",
             };
         });
 
@@ -147,15 +140,13 @@ function createWindow() {
     });
     win.loadFile(path.join(__dirname, "index.html"));
 
-    win.webContents.setWindowOpenHandler(({
-        url
-    }) => {
+    win.webContents.setWindowOpenHandler(({ url }) => {
         // Only allow https external links
         if (url.startsWith("https:")) {
             shell.openExternal(url);
         }
         return {
-            action: "deny"
+            action: "deny",
         };
     });
 }
@@ -163,55 +154,63 @@ function createWindow() {
 app.whenReady().then(() => {
     createWindow();
 
-    const menu = Menu.buildFromTemplate([{
+    const menu = Menu.buildFromTemplate([
+        {
             label: "File",
-            submenu: [{
-                role: "quit"
-            }],
+            submenu: [
+                {
+                    role: "quit",
+                },
+            ],
         },
         {
             label: "Edit",
-            submenu: [{
-                    role: "undo"
+            submenu: [
+                {
+                    role: "undo",
                 },
                 {
-                    role: "redo"
+                    role: "redo",
                 },
                 {
-                    type: "separator"
+                    type: "separator",
                 },
                 {
-                    role: "cut"
+                    role: "cut",
                 },
                 {
-                    role: "copy"
+                    role: "copy",
                 },
                 {
-                    role: "paste"
+                    role: "paste",
                 },
                 {
-                    type: "separator"
+                    type: "separator",
                 },
                 {
-                    role: "selectall"
+                    role: "selectall",
                 },
             ],
         },
         {
             label: "View",
-            submenu: [{
-                role: "toggleDevTools"
-            }],
+            submenu: [
+                {
+                    role: "toggleDevTools",
+                },
+            ],
         },
         {
             label: "Help",
-            submenu: [{
-                label: "About",
-                click() {
-                    Menus.assert();
-                    Menus.AboutWindow();
+            submenu: [
+                {
+                    label: "About",
+                    click() {
+                        Menus.assert();
+                        Menus.AboutWindow();
+                    },
                 },
-            }, ],
+            ],
         },
     ]);
 

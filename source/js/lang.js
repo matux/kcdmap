@@ -27,7 +27,8 @@ var strings = {
         translation: {
             settings: "Einstellungen",
             languagechange: "Sprache ändern",
-            translationbr: "Portugiesische/Brasilianische Übersetzung von RogerHN",
+            translationbr:
+                "Portugiesische/Brasilianische Übersetzung von RogerHN",
             version: "version",
         },
     },
@@ -51,7 +52,8 @@ var strings = {
         translation: {
             settings: "Setări",
             languagechange: "Schimbă Limba",
-            translationbr: "Traducere în Portugueză Braziliană făcută de RogerHN",
+            translationbr:
+                "Traducere în Portugueză Braziliană făcută de RogerHN",
             version: "Versiunea",
         },
     },
@@ -59,7 +61,8 @@ var strings = {
         translation: {
             settings: "Ayarlar",
             languagechange: "Dili Değiştir",
-            translationbr: "Portekizce Brezilya RogerHN tarafından çevrilmiştir",
+            translationbr:
+                "Portekizce Brezilya RogerHN tarafından çevrilmiştir",
             version: "Versiyon",
         },
     },
@@ -80,24 +83,30 @@ var strings = {
         },
     },
 };
-$(document).ready(function() {
+$(document).ready(function () {
     var n = "en";
     null != localStorage.getItem("language") &&
         (n = localStorage.getItem("language")),
-        i18n.init({
-            lng: n,
-            resStore: strings,
-            fallbackLng: "en"
-        }, function(n) {
-            $(document).i18n();
-        }),
-        $(".lang").click(function() {
+        i18n.init(
+            {
+                lng: n,
+                resStore: strings,
+                fallbackLng: "en",
+            },
+            function (n) {
+                $(document).i18n();
+            },
+        ),
+        $(".lang").click(function () {
             var n = $(this).attr("data-lang");
             localStorage.setItem("language", n),
-                i18n.init({
-                    lng: n
-                }, function(n) {
-                    $(document).i18n();
-                });
+                i18n.init(
+                    {
+                        lng: n,
+                    },
+                    function (n) {
+                        $(document).i18n();
+                    },
+                );
         });
 });

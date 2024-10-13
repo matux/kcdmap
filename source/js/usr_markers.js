@@ -1,4 +1,5 @@
-var usr_markers = [{
+var usr_markers = [
+    {
         name: "Treasure",
         desc: "Treasure I",
         desc2: "Enter the house and turn left, then use the ladder.",
