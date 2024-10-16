@@ -169,6 +169,7 @@ map.on("zoomend", function (e) {
                 $(".text-label.secondary").css("visibility", "hidden");
     }
 });
+
 for (let e = 0; e < markers.length; e++) {
     null == layerGroups[markers[e].group] &&
         (layerGroups[markers[e].group] = new L.LayerGroup()),
@@ -1553,10 +1554,15 @@ null === langactive
         }),
             localStorage.setItem("activemarkers", JSON.stringify(t));
     });
+
 let activemarkers = JSON.parse(localStorage.getItem("activemarkers"));
-if (void 0 !== localStorage.activemarkers)
-    for (let e = 0; e < activemarkers.length; e++)
-        $("#" + activemarkers[e].id).prop("checked", activemarkers[e].value),
-            activemarkers[e].value &&
-                ($("#allmarkers").prop("checked", !1),
-                map.addLayer(layerGroups[activemarkers[e].id]));
+
+if (localStorage.activemarkers) {
+    for (let e = 0; e < activemarkers.length; e++) {
+        $("#" + activemarkers[e].id).prop("checked", activemarkers[e].value);
+        if (activemarkers[e].value) {
+            $("#allmarkers").prop("checked", false);
+            map.addLayer(layerGroups[activemarkers[e].id]);
+        }
+    }
+}

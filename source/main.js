@@ -1,5 +1,10 @@
 const { app, BrowserWindow, shell, Menu } = require("electron");
 const path = require("node:path");
+
+require("electron-reload")(__dirname, {
+    electron: require(`${__dirname}/node_modules/electron`),
+});
+
 /*const { version, homepage } = require(path.join(__dirname, 'package.json'));
 const fs = require("node:fs/promises");
 const minify = require("html-minifier").minify;*/
@@ -22,13 +27,13 @@ const minify = require("html-minifier").minify;*/
           body {padding:0;margin:0;min-height: 100vh;display:grid;place-items:center;background-position:center;background-repeat:no-repeat;background-color:#d8c8af;background-image:url("${path.join(__dirname, "assets", "images", "bg.png")}");}
         </style>
     </head>
-    
+
     <body>
       <header class="list-title">Kindom Come Map @${version}</header>
       <main> <a class="link" href="${homepage}" target="_blank">Github</a> </main>
       <footer class="text">by <a class="link" href="https://ahmetcanisik.com/" target="_blank">ahmetcanisik</a></footer>
     </body>
-    
+
     </html>`;
 
   const minifyAboutContent = minify(aboutContent, {
